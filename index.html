@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>학교 환경정보 관제 시스템</title>
+    <style>
+        body { background-color: #0f172a; color: white; font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 20px; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 90vh; }
+        .card { background-color: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .header { text-align: center; font-size: 2rem; margin-bottom: 20px; color: #10b981; font-weight: bold; }
+        .counter { font-size: 3rem; font-weight: bold; color: #f59e0b; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="header">🌱 본관 1층 환경 정보 전광판 (오전 7시 자동 갱신)</div>
+    <div class="grid-container">
+        <div class="card">
+            <h2>🌍 세계 실시간 CO₂ 배출량</h2>
+            <div class="counter" id="world-co2">0</div>
+            <p style="text-align:center; color:#94a3b8;">(최근 통계 기준 매초 누적 계산치)</p>
+        </div>
+        <div class="card">
+            <h2>📊 대한민국 온실가스 지표 (월간)</h2>
+            <p>지난달 배출량 대비 감축 목표 및 지표가 표시되는 구역입니다.</p>
+        </div>
+        <div class="card">
+            <h2>📰 실시간 환경 뉴스</h2>
+            <ul id="news-list">
+                <li>[뉴스] 탄소중립 실천을 위한 학교 환경 교육 확대</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>💡 오늘의 환경 상식</h2>
+            <p id="eco-tip">종이컵 대신 텀블러를 사용하면 연간 2kg의 CO2를 줄일 수 있습니다.</p>
+        </div>
+    </div>
+
+    <script>
+        // 매초 탄소 배출량이 늘어나는 실시간 카운터 스크립트 예시
+        let baseEmission = 40125471000; // 기준 배출량
+        setInterval(() => {
+            baseEmission += 1331; // 매초 전 세계에서 배출되는 추정치 더하기
+            document.getElementById('world-co2').innerText = baseEmission.toLocaleString() + ' 톤';
+        }, 1000);
+    </script>
+</body>
+</html>
