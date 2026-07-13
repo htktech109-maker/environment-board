@@ -61,29 +61,28 @@
     </div>
 
     <script>
-        // 1. 세계 탄소 배출 실시간 카운터 (초당 약 1,331 톤)
+        // 1. 세계 탄소 배출 실시간 카운터
         let worldEmission = 40125471000; 
-        setInterval(() => {
+        setInterval(function() {
             worldEmission += 1331; 
             document.getElementById('world-co2').innerText = worldEmission.toLocaleString() + ' 톤';
         }, 1000);
 
-        // 2. 대한민국 탄소 배출 실시간 카운터 (초당 약 20.7 톤)
+        // 2. 대한민국 탄소 배출 실시간 카운터
         let koreaEmission = 654500000; 
-        setInterval(() => {
+        setInterval(function() {
             koreaEmission += 21; 
             document.getElementById('korea-co2').innerText = koreaEmission.toLocaleString() + ' 톤';
         }, 1000);
 
-        // 3. 대구광역시 탄소 배출 실시간 카운터 (초당 약 0.29 톤)
+        // 3. 대구광역시 탄소 배출 실시간 카운터
         let daeguEmission = 9240000; 
-        setInterval(() => {
+        setInterval(function() {
             daeguEmission += 0.29; 
-            // 소수점 첫째자리까지 표현하여 숫자가 끊임없이 올라가는 느낌 극대화
             document.getElementById('daegu-co2').innerText = daeguEmission.toFixed(1).toLocaleString() + ' 톤';
         }, 1000);
 
-        // 4. 💡 오늘의 환경 상식 5초 자동 롤링 (10개)
+        // 4. 오늘의 환경 상식 5초 자동 롤링
         const ecoTips = [
             "종이컵 대신 텀블러를 사용하면 연간 2kg의 이산화탄소를 줄일 수 있습니다!",
             "양치할 때 컵을 사용하면 물을 최대 5리터까지 아낄 수 있습니다.",
@@ -103,7 +102,7 @@
             tipIndex = (tipIndex + 1) % ecoTips.length;
         }
 
-        // 초기화 실행
+        // 초기 실행
         rotateEcoTips();
 
         // 5초마다 상식 전환 실행
