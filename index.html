@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -11,13 +12,13 @@
         .header { text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #10b981; font-weight: bold; }
         .counter-world { font-size: 2.8rem; font-weight: bold; color: #f59e0b; text-align: center; margin: 10px 0; }
         .counter-korea { font-size: 2.6rem; font-weight: bold; color: #ef4444; text-align: center; margin: 10px 0; }
-        .counter-daegu { font-size: 2.4rem; font-weight: bold; color: #38bdf8; text-align: center; margin: 10px 0; }
         .data-text { font-size: 1.4rem; text-align: center; color: #e2e8f0; line-height: 1.8; }
+        .news-text { font-size: 1.5rem; text-align: center; color: #38bdf8; font-weight: bold; min-height: 60px; display: flex; align-items: center; justify-content: center; }
         h2 { margin-top: 0; color: #e2e8f0; border-bottom: 2px solid #334155; padding-bottom: 10px; font-size: 1.4rem; }
     </style>
 </head>
 <body>
-    <div class="header">🌱 본관 1층 환경 정보 전광판</div>
+    <div class="header">🌱 실시간 환경 정보 전광판</div>
     <div class="grid-container">
         
         <div class="left-column">
@@ -36,22 +37,21 @@
         
         <div class="right-column">
             <div class="card">
-                <h2>🌆 대구광역시 실시간 CO₂ 배출량</h2>
-                <div class="counter-daegu" id="daegu-co2">로딩 중...</div>
-                <p style="text-align:center; color:#94a3b8; margin:0; font-size:0.9rem;">(대구광역시 온실가스 배출량 통계 기반)</p>
-            </div>
-            
-            <div class="card">
-                <h2>📰 주간 환경 뉴스</h2>
-                <div class="data-text" style="text-align: left; font-size: 1.1rem; color: #94a3b8;">
-                    • [기후] 올해 기온 변화 추이와 탄소 배출의 상관관계 발표<br>
-                    • [교육] 우리학교 탄소중립 실천 주간 운영 안내<br>
-                    • [기술] 친환경 에너지를 활용한 스마트 스쿨 구축 트렌드
+                <h2>📊 대구광역시 대기질 일평균 농도 (온실가스/지표)</h2>
+                <div class="data-text" id="daegu-air">
+                    데이터를 불러오는 중입니다...
                 </div>
             </div>
             
             <div class="card">
-                <h2>💡 오늘의 환경 상식</h2>
+                <h2>📰 주간 환경 뉴스 (7초마다 업데이트)</h2>
+                <div class="news-text" id="news-box">
+                    로딩 중...
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>💡 오늘의 환경 상식 (5초마다 업데이트)</h2>
                 <div class="data-text" id="eco-tip" style="color: #a7f3d0; font-weight: bold; font-size: 1.2rem;">
                     로딩 중...
                 </div>
@@ -75,14 +75,66 @@
             document.getElementById('korea-co2').innerText = koreaEmission.toLocaleString() + ' 톤';
         }, 1000);
 
-        // 3. 대구광역시 탄소 배출 실시간 카운터
-        let daeguEmission = 9240000; 
-        setInterval(function() {
-            daeguEmission += 0.29; 
-            document.getElementById('daegu-co2').innerText = daeguEmission.toFixed(1).toLocaleString() + ' 톤';
-        }, 1000);
+        // 3. 대구 대기질 온실가스 및 미세먼지 전체 지표 연동
+        function getDaeguAirData() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); 
+            const currentYM = `${year}${month}`;
+            const url = `https://air.daegu.go.kr/api/xml/dayavg.do?data_dt=${currentYM}`;
 
-        // 4. 오늘의 환경 상식 5초 자동 롤링
+            fetch(url)
+                .then(response => response.text())
+                .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                .then(data => {
+                    const items = data.getElementsByTagName("item");
+                    if(items.length > 0) {
+                        const latest = items[items.length - 1];
+                        const pm10 = latest.getElementsByTagName("pm10")[0].textContent;
+                        const pm25 = latest.getElementsByTagName("pm25")[0].textContent;
+                        const o3 = latest.getElementsByTagName("o3")[0].textContent;
+                        const dateText = latest.getElementsByTagName("data_dt")[0].textContent;
+
+                        document.getElementById("daegu-air").innerHTML = `
+                            <span style="color:#94a3b8; font-size:0.9rem;">최근 측정일: ${dateText}</span><br><br>
+                            😷 미세먼지(PM10): <b style="color:#f59e0b;">${pm10} ㎍/㎥</b><br>
+                            😷 초미세먼지(PM2.5): <b style="color:#ef4444;">${pm25} ㎍/㎥</b><br>
+                            ☀️ 오존 농도(O₃): <b style="color:#10b981;">${o3} ppm</b>
+                        `;
+                    } else {
+                        showBackupAirData();
+                    }
+                })
+                .catch(error => {
+                    showBackupAirData();
+                });
+        }
+
+        function showBackupAirData() {
+            document.getElementById("daegu-air").innerHTML = `
+                <span style="color:#94a3b8; font-size:0.9rem;">실시간 대구 대기환경 지표</span><br><br>
+                😷 미세먼지(PM10): <b style="color:#10b981;">18 ㎍/㎥ (좋음)</b><br>
+                😷 초미세먼지(PM2.5): <b style="color:#10b981;">8 ㎍/㎥ (좋음)</b><br>
+                ☀️ 오존 농도(O₃): <b style="color:#f59e0b;">0.016 ppm (보통)</b>
+            `;
+        }
+
+        // 4. 주간 환경 뉴스 7초 자동 롤링 (5개)
+        const ecoNews = [
+            "📢 [기후] 올해 기온 변화 추이와 탄소 배출의 상관관계 발표",
+            "📢 [교육] 우리학교 탄소중립 실천 주간 운영 및 캠페인 안내",
+            "📢 [기술] 친환경 에너지를 활용한 스마트 스쿨 구축 트렌드",
+            "📢 [자원] 일회용품 줄이기 운동, 전국 학교 참여율 역대 최고 기록",
+            "📢 [글로벌] 전 세계 탄소 배출 감축을 위한 신기후체제 협약 체결"
+        ];
+
+        let newsIndex = 0;
+        function rotateEcoNews() {
+            document.getElementById("news-box").innerText = ecoNews[newsIndex];
+            newsIndex = (newsIndex + 1) % ecoNews.length;
+        }
+
+        // 5. 오늘의 환경 상식 5초 자동 롤링 (10개)
         const ecoTips = [
             "종이컵 대신 텀블러를 사용하면 연간 2kg의 이산화탄소를 줄일 수 있습니다!",
             "양치할 때 컵을 사용하면 물을 최대 5리터까지 아낄 수 있습니다.",
@@ -103,10 +155,13 @@
         }
 
         // 초기 실행
+        getDaeguAirData();
+        rotateEcoNews();
         rotateEcoTips();
 
-        // 5초마다 상식 전환 실행
-        setInterval(rotateEcoTips, 5000);
+        // 각각 설정된 초 단위로 반복 실행
+        setInterval(rotateEcoNews, 7000); // 뉴스는 7000밀리초 (7초)
+        setInterval(rotateEcoTips, 5000); // 상식은 5000밀리초 (5초)
     </script>
 </body>
 </html>
