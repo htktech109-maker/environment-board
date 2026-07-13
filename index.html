@@ -5,103 +5,109 @@
     <title>우리학교 환경정보 관제 시스템</title>
     <style>
         body { background-color: #0f172a; color: white; font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 20px; }
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 85vh; }
-        .card { background-color: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; flex-direction: column; justify-content: center; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; min-height: 85vh; }
+        .left-column, .right-column { display: flex; flex-direction: column; gap: 20px; }
+        .card { background-color: #1e293b; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; flex-direction: column; justify-content: center; flex: 1; }
         .header { text-align: center; font-size: 2.2rem; margin-bottom: 20px; color: #10b981; font-weight: bold; }
-        .counter { font-size: 2.8rem; font-weight: bold; color: #f59e0b; text-align: center; margin: 10px 0; }
-        .data-text { font-size: 1.5rem; text-align: center; color: #38bdf8; line-height: 1.8; }
-        h2 { margin-top: 0; color: #e2e8f0; border-bottom: 2px solid #334155; padding-bottom: 10px; font-size: 1.5rem; }
+        .counter-world { font-size: 2.8rem; font-weight: bold; color: #f59e0b; text-align: center; margin: 10px 0; }
+        .counter-korea { font-size: 2.6rem; font-weight: bold; color: #ef4444; text-align: center; margin: 10px 0; }
+        .counter-daegu { font-size: 2.4rem; font-weight: bold; color: #38bdf8; text-align: center; margin: 10px 0; }
+        .data-text { font-size: 1.4rem; text-align: center; color: #e2e8f0; line-height: 1.8; }
+        h2 { margin-top: 0; color: #e2e8f0; border-bottom: 2px solid #334155; padding-bottom: 10px; font-size: 1.4rem; }
     </style>
 </head>
 <body>
-    <div class="header">🌱 실시간 환경 정보 전광판</div>
+    <div class="header">🌱 본관 1층 환경 정보 전광판</div>
     <div class="grid-container">
-        <div class="card">
-            <h2>🌍 세계 실시간 CO₂ 배출량</h2>
-            <div class="counter" id="world-co2">로딩 중...</div>
-            <p style="text-align:center; color:#94a3b8; margin:0;">(최근 통계 기반 매초 누적 계산치)</p>
-        </div>
         
-        <div class="card">
-            <h2>📊 대구광역시 대기질 일평균 농도</h2>
-            <div class="data-text" id="daegu-air">
-                데이터를 불러오는 중입니다...
+        <div class="left-column">
+            <div class="card">
+                <h2>🌍 세계 실시간 CO₂ 배출량</h2>
+                <div class="counter-world" id="world-co2">로딩 중...</div>
+                <p style="text-align:center; color:#94a3b8; margin:0; font-size:0.9rem;">(최근 통계 기반 매초 누적 계산치)</p>
+            </div>
+            
+            <div class="card">
+                <h2>🇰🇷 대한민국 실시간 CO₂ 배출량</h2>
+                <div class="counter-korea" id="korea-co2">로딩 중...</div>
+                <p style="text-align:center; color:#94a3b8; margin:0; font-size:0.9rem;">(국가 온실가스 인벤토리 통계 기반)</p>
             </div>
         </div>
         
-        <div class="card">
-            <h2>📰 주간 환경 뉴스</h2>
-            <div class="data-text" style="text-align: left; font-size: 1.2rem;">
-                • [기후] 올해 기온 변화 추이와 탄소 배출의 상관관계 발표<br>
-                • [교육] 우리학교 탄소중립 실천 주간 운영 안내<br>
-                • [기술] 친환경 에너지를 활용한 스마트 스쿨 구축 트렌드
+        <div class="right-column">
+            <div class="card">
+                <h2>🌆 대구광역시 실시간 CO₂ 배출량</h2>
+                <div class="counter-daegu" id="daegu-co2">로딩 중...</div>
+                <p style="text-align:center; color:#94a3b8; margin:0; font-size:0.9rem;">(대구광역시 온실가스 배출량 통계 기반)</p>
+            </div>
+            
+            <div class="card">
+                <h2>📰 주간 환경 뉴스</h2>
+                <div class="data-text" style="text-align: left; font-size: 1.1rem; color: #94a3b8;">
+                    • [기후] 올해 기온 변화 추이와 탄소 배출의 상관관계 발표<br>
+                    • [교육] 우리학교 탄소중립 실천 주간 운영 안내<br>
+                    • [기술] 친환경 에너지를 활용한 스마트 스쿨 구축 트렌드
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>💡 오늘의 환경 상식</h2>
+                <div class="data-text" id="eco-tip" style="color: #a7f3d0; font-weight: bold; font-size: 1.2rem;">
+                    로딩 중...
+                </div>
             </div>
         </div>
-        
-        <div class="card">
-            <h2>💡 오늘의 환경 상식</h2>
-            <div class="data-text" id="eco-tip" style="color: #a7f3d0;">
-                종이컵 대신 텀블러를 사용하면 연간 2kg의 이산화탄소를 줄일 수 있습니다!
-            </div>
-        </div>
+
     </div>
 
     <script>
-        // 1. 세계 탄소 배출 실시간 카운터 스크립트
-        let baseEmission = 40125471000; 
+        // 1. 세계 탄소 배출 실시간 카운터 (초당 약 1,331 톤)
+        let worldEmission = 40125471000; 
         setInterval(() => {
-            baseEmission += 1331; 
-            document.getElementById('world-co2').innerText = baseEmission.toLocaleString() + ' 톤';
+            worldEmission += 1331; 
+            document.getElementById('world-co2').innerText = worldEmission.toLocaleString() + ' 톤';
         }, 1000);
 
-        // 2. 대구 대기질 API 데이터를 진짜로 긁어오는 스크립트
-        function getDaeguAirData() {
-            const today = new Date();
-            const year = today.getFullYear();
-            // 월을 2자리 숫자로 맞추기 (예: 7월 -> 07)
-            const month = String(today.getMonth() + 1).padStart(2, '0'); 
-            const currentYM = `${year}${month}`;
+        // 2. 대한민국 탄소 배출 실시간 카운터 (초당 약 20.7 톤)
+        let koreaEmission = 654500000; 
+        setInterval(() => {
+            koreaEmission += 21; 
+            document.getElementById('korea-co2').innerText = koreaEmission.toLocaleString() + ' 톤';
+        }, 1000);
 
-            // 대구 대기질 API URL (공공데이터포털 LINK 활용)
-            const url = `https://air.daegu.go.kr/api/xml/dayavg.do?data_dt=${currentYM}`;
+        // 3. 대구광역시 탄소 배출 실시간 카운터 (초당 약 0.29 톤)
+        let daeguEmission = 9240000; 
+        setInterval(() => {
+            daeguEmission += 0.29; 
+            // 소수점 첫째자리까지 표현하여 숫자가 끊임없이 올라가는 느낌 극대화
+            document.getElementById('daegu-co2').innerText = daeguEmission.toFixed(1).toLocaleString() + ' 톤';
+        }, 1000);
 
-            fetch(url)
-                .then(response => response.text())
-                .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-                .then(data => {
-                    // API에서 가장 최신 날짜의 대기 정보 추출하기
-                    const items = data.getElementsByTagName("item");
-                    if(items.length > 0) {
-                        const latest = items[items.length - 1]; // 가장 최신 데이터 행
-                        const pm10 = latest.getElementsByTagName("pm10")[0].textContent;
-                        const pm25 = latest.getElementsByTagName("pm25")[0].textContent;
-                        const o3 = latest.getElementsByTagName("o3")[0].textContent;
-                        const dateText = latest.getElementsByTagName("data_dt")[0].textContent;
+        // 4. 💡 오늘의 환경 상식 5초 자동 롤링 (10개)
+        const ecoTips = [
+            "종이컵 대신 텀블러를 사용하면 연간 2kg의 이산화탄소를 줄일 수 있습니다!",
+            "양치할 때 컵을 사용하면 물을 최대 5리터까지 아낄 수 있습니다.",
+            "안 쓰는 플러그를 뽑아두는 것만으로도 전기 요금의 10%를 절약할 수 있어요.",
+            "샤워 시간을 1분만 줄여도 12리터의 물과 이산화탄소 배출을 줄입니다.",
+            "일주일에 하루 고기를 먹지 않으면 한 달 동안 차를 타지 않는 효과가 있습니다.",
+            "청구서를 이메일이나 모바일로 바꾸면 종이 생산에 드는 이산화탄소가 줄어듭니다.",
+            "냉장고 온도를 1도만 높여도 연간 상당량의 에너지를 아낄 수 있습니다.",
+            "가까운 거리는 걷거나 자전거를 이용해 보세요. 건강과 지구를 모두 지킵니다.",
+            "장바구니(에코백)를 사용하면 썩는 데 500년이 걸리는 비닐봉지를 줄입니다.",
+            "LED 조명은 일반 전구보다 에너지를 80% 적게 쓰고 수명은 10배 깁니다."
+        ];
 
-                        document.getElementById("daegu-air").innerHTML = `
-                            <span style="color:#94a3b8; font-size:1rem;">최근 측정일: ${dateText}</span><br><br>
-                            😷 미세먼지(PM10): <b style="color:#f59e0b;">${pm10} ㎍/㎥</b><br>
-                            😷 초미세먼지(PM2.5): <b style="color:#ef4444;">${pm25} ㎍/㎥</b><br>
-                            ☀️ 오존 농도(O₃): <b style="color:#10b981;">${o3} ppm</b>
-                        `;
-                    } else {
-                        document.getElementById("daegu-air").innerText = "이번 달 대기질 데이터를 찾을 수 없습니다.";
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                    // 보안(CORS) 이슈 등으로 브라우저 직접 호출이 막힐 경우 보여줄 가상의 실시간 평균 데이터 안전장치
-                    document.getElementById("daegu-air").innerHTML = `
-                        <span style="color:#94a3b8; font-size:1rem;">실시간 대구 평균 지표</span><br><br>
-                        😷 미세먼지(PM10): <b style="color:#10b981;">17 ㎍/㎥ (좋음)</b><br>
-                        😷 초미세먼지(PM2.5): <b style="color:#10b981;">7 ㎍/㎥ (좋음)</b><br>
-                        ☀️ 오존 농도(O₃): <b style="color:#f59e0b;">0.015 ppm (보통)</b>
-                    `;
-                });
+        let tipIndex = 0;
+        function rotateEcoTips() {
+            document.getElementById("eco-tip").innerText = ecoTips[tipIndex];
+            tipIndex = (tipIndex + 1) % ecoTips.length;
         }
 
-        // 페이지가 열릴 때 대구 데이터 가져오기 실행
-        getDaeguAirData();
+        // 초기화 실행
+        rotateEcoTips();
+
+        // 5초마다 상식 전환 실행
+        setInterval(rotateEcoTips, 5000);
     </script>
 </body>
 </html>
